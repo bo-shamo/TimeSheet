@@ -4,16 +4,21 @@ function onEdit() {
   var startrange = ss.getActiveRange();
   var range = startrange;
   var fridayFlag = false;
+  
   //Check if varables are in concern range
   if (range.getColumn() == 1 || range.getColumn() == 2){
+  
     //program to add a day
     if (range.getColumn() == 1){
+  
       //Checks if the date is friday
       if(isFriday(range) == false){
+    
         //Normal add row below and autofill
         addADay (sheet, range);
       }
       else {
+       
         //Different, add a row above, move values up, then autofill
         addAFriday (sheet, range);
         fridayFlag = true;
@@ -42,9 +47,8 @@ function onEdit() {
 
   //Checks if the date in the cell is friday
 function isFriday(r) {
-  //check if the date is friday
+
   dateBelow = r.offset(1,(3-r.getColumn()));
-  Logger.log(+dateBelow.getValue());
   if(+dateBelow.getValue() > 0){
     return false;
   }
@@ -53,13 +57,14 @@ function isFriday(r) {
   }
 }
   
-  //adds a row below, the autofills
+//adds a row below, the autofills
 function addADay (s,r) {
   s.insertRowsAfter(r.getRow(),1);
   autoFillCells (s,r,r.offset(1,0));
   return;
 }
-  //adds row above, shifts all values up, then autofills
+
+//adds row above, shifts all values up, then autofills
 function addAFriday (s,r) {
   s.insertRowsBefore(r.getRow(),1);
   autoFillCells (s,r.offset(1,0),r);
@@ -68,7 +73,6 @@ function addAFriday (s,r) {
   //fills columns (C,I,T,U) down one row to keep formatting
 function autoFillCells (s,r,endR) {
 
-  
   var copyto = endR.offset(0,2);
   r.offset(0,2).activate();
   s.getCurrentCell().copyTo(copyto,SpreadsheetApp.CopyPasteType.PASTE_VALUES,false);
@@ -92,7 +96,7 @@ function autoFillCells (s,r,endR) {
   return;
 }
 
-  //Checks if there is another same day above the current cell
+//Checks if there is another same day above the current cell
 function canRemoveADay (r) {
   var date = r.offset (0,1);
   var aboveDate = r.offset (-1,1);
@@ -108,7 +112,6 @@ function canRemoveADay (r) {
 }
 
 function removeADay(s,r) {
-  Logger.log("isFriday = "+ isFriday(r));
   if(isFriday(r) != true){
     s.deleteRows(r.getRow(),1);
   }
